@@ -1,20 +1,20 @@
-// Surround Fill (5.1 / 7.1, tutti i siti): instrada l'audio di <video>/<audio>
-// su 6 o 8 canali prima che esca dal browser. Nessun ritardo aggiunto.
-//   Posteriori: FL->BL, FR->BR          (canali 4,5 — in 5.1 sono i surround)
-//   Laterali:   FL->SL, FR->SR          (canali 6,7 — solo 7.1)
-//   Centrale:   (FL+FR)/2 -> C          (canale 2)
-//   Subwoofer:  (FL+FR)/2 passa-basso 120 Hz -> LFE (canale 3)
-// Ordine canali Windows: 0=FL 1=FR 2=C 3=LFE 4=BL 5=BR 6=SL 7=SR
+// Surround Fill (5.1 / 7.1, all sites): routes <video>/<audio> audio
+// to 6 or 8 channels before it leaves the browser. No added latency.
+//   Rear:      FL->BL, FR->BR           (channels 4,5 — the surrounds in 5.1)
+//   Side:      FL->SL, FR->SR           (channels 6,7 — 7.1 only)
+//   Center:    (FL+FR)/2 -> C           (channel 2)
+//   Subwoofer: (FL+FR)/2 low-pass 120 Hz -> LFE (channel 3)
+// Windows channel order: 0=FL 1=FR 2=C 3=LFE 4=BL 5=BR 6=SL 7=SR
 (() => {
   const state = { rear: false, side: false, center: false, sub: false };
   let ctx = null;
-  let outCh = 0; // 6 o 8
+  let outCh = 0; // 6 or 8
   const hooked = new WeakMap(); // media -> gain nodes
   let warned = false;
 
-  const CENTER_GAIN = 0.5; // media di L e R
-  const SUB_GAIN = 0.5;    // media di L e R
-  const SUB_CUTOFF = 120;  // Hz, frequenza di taglio del subwoofer
+  const CENTER_GAIN = 0.5; // average of L and R
+  const SUB_GAIN = 0.5;    // average of L and R
+  const SUB_CUTOFF = 120;  // Hz, subwoofer cutoff frequency
 
   function active() { return state.rear || state.side || state.center || state.sub; }
 
@@ -31,8 +31,8 @@
     return ctx;
   }
 
-  // Salta i media che con Web Audio diventerebbero muti:
-  // DRM (Netflix, Prime, Spotify...) e file di altri domini senza CORS.
+  // Skip media that Web Audio would turn silent:
+  // DRM (Netflix, Prime, Spotify...) and files from other domains without CORS.
   function safe(el) {
     if (el.mediaKeys) return false;
     const src = el.currentSrc || el.src;
@@ -51,15 +51,15 @@
     if (!outCh) {
       if (!warned) {
         warned = true;
-        console.warn("[Surround Fill] L'uscita audio ha solo",
-          c.destination.maxChannelCount, "canali. Imposta Windows su 5.1 o 7.1.");
+        console.warn("[Surround Fill] The audio output only has",
+          c.destination.maxChannelCount, "channels. Set Windows to 5.1 or 7.1.");
       }
       return;
     }
 
     const src = c.createMediaElementSource(media);
 
-    // Forza stereo (anche le sorgenti mono finiscono su L e R)
+    // Force stereo (mono sources also end up on L and R)
     const stereo = c.createGain();
     stereo.channelCount = 2;
     stereo.channelCountMode = "explicit";
@@ -73,26 +73,26 @@
     split.connect(merge, 0, 0);   // FL
     split.connect(merge, 1, 1);   // FR
 
-    // Centrale: somma L+R (più ingressi su un GainNode si sommano)
+    // Center: sum of L+R (multiple inputs to a GainNode are summed)
     const ctr = c.createGain();
     split.connect(ctr, 0);
     split.connect(ctr, 1);
     ctr.connect(merge, 0, 2);
 
-    // Subwoofer: somma L+R filtrata (solo i bassi) sul canale LFE
+    // Subwoofer: filtered L+R sum (bass only) on the LFE channel
     const subMix = c.createGain();
     split.connect(subMix, 0);
     split.connect(subMix, 1);
     const lp1 = c.createBiquadFilter();
-    const lp2 = c.createBiquadFilter(); // due filtri in serie = taglio più netto
+    const lp2 = c.createBiquadFilter(); // two filters in series = steeper cutoff
     lp1.type = lp2.type = "lowpass";
     lp1.frequency.value = lp2.frequency.value = SUB_CUTOFF;
-    lp1.Q.value = lp2.Q.value = -3.0103; // Butterworth (Q in dB): nessun picco sui bassi
+    lp1.Q.value = lp2.Q.value = -3.0103; // Butterworth (Q in dB): no bass peak
     subMix.connect(lp1);
     lp1.connect(lp2);
     lp2.connect(merge, 0, 3);
 
-    // Copia L/R su una coppia di canali di uscita
+    // Copy L/R to a pair of output channels
     function pair(outL, outR) {
       const gL = c.createGain();
       const gR = c.createGain();
@@ -121,7 +121,7 @@
   }
 
   function scan() {
-    if (!active()) return; // non tocca nulla finché non viene attivato qualcosa
+    if (!active()) return; // touch nothing until something is switched on
     document.querySelectorAll("video, audio").forEach(hook);
   }
 
@@ -134,11 +134,11 @@
     if (ctx && ctx.state === "suspended") ctx.resume();
   }
 
-  // Sblocca l'AudioContext al primo clic/tasto se il browser lo tiene sospeso
+  // Unlock the AudioContext on the first click/key press if the browser keeps it suspended
   ["click", "keydown"].forEach(ev =>
     document.addEventListener(ev, () => ctx && ctx.resume(), true));
 
-  // Riprova quando un media inizia a caricare (src non ancora pronto alla scansione)
+  // Retry when a media element starts loading (src not ready yet at scan time)
   document.addEventListener("loadedmetadata", e => {
     if (active() && e.target instanceof HTMLMediaElement) hook(e.target);
   }, true);

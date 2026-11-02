@@ -9,10 +9,8 @@ A Chrome/Edge extension that copies the browser's stereo audio to the other chan
 - **Center**: (left + right) / 2 → center
 - **Subwoofer**: (left + right) / 2, only the bass below 120 Hz → LFE
 - Detects whether the output is 5.1 or 7.1 and shows it in the popup
-- Four independent switches; the badge on the icon shows what is on (`P`, `L`, `C`, `S` and combinations)
+- Four independent switches; the badge on the icon shows what is on (`R` rear, `S` side, `C` center, `B` bass/subwoofer, and combinations)
 - Works on any site with regular video/audio (YouTube, Twitch, Vimeo, news sites…)
-
-The popup is in Italian: *Posteriori* = rear (`P`), *Laterali* = side (`L`), *Centrale* = center (`C`), *Subwoofer* (`S`).
 
 ## Limitations
 

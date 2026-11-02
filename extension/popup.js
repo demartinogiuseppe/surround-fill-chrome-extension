@@ -1,6 +1,6 @@
 const keys = ["enabled", "side", "center", "sub"];
 
-// Rileva quanti canali ha l'uscita audio predefinita
+// Detect how many channels the default audio output has
 let ch = 2;
 try {
   const ac = new AudioContext();
@@ -10,11 +10,11 @@ try {
 
 const mode = document.getElementById("mode");
 if (ch >= 8) {
-  mode.textContent = "Uscita rilevata: 7.1";
+  mode.textContent = "Output detected: 7.1";
 } else if (ch >= 6) {
-  mode.textContent = "Uscita rilevata: 5.1";
+  mode.textContent = "Output detected: 5.1";
 } else {
-  mode.textContent = `Uscita a ${ch} canali: imposta Windows su 5.1 o 7.1`;
+  mode.textContent = `${ch}-channel output: set Windows to 5.1 or 7.1`;
   mode.className = "warn";
 }
 
