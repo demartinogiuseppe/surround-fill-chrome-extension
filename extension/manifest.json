@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "Surround Fill 5.1/7.1",
+  "version": "1.4",
+  "description": "Copia L/R su posteriori, laterali (7.1), centrale e subwoofer per video e audio nel browser.",
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Surround Fill",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ]
+}
