@@ -1,42 +1,44 @@
 # Surround Fill 5.1 / 7.1
 
-Estensione per Chrome/Edge che copia l'audio stereo del browser sugli altri canali di un impianto 5.1 o 7.1: posteriori, laterali (7.1), centrale e subwoofer. Lavora dentro la pagina con la Web Audio API: nessun driver, nessun programma da installare, nessun ritardo aggiunto.
+A Chrome/Edge extension that copies the browser's stereo audio to the other channels of a 5.1 or 7.1 speaker system: rear, side (7.1), center and subwoofer. It works inside the page with the Web Audio API: no drivers, no software to install, no added latency.
 
-## Cosa fa
+## What it does
 
-- **Posteriori**: anteriore sinistro → posteriore sinistro, anteriore destro → posteriore destro
-- **Laterali** (solo 7.1): anteriore sinistro → laterale sinistro, anteriore destro → laterale destro
-- **Centrale**: (sinistro + destro) / 2 → centrale
-- **Subwoofer**: (sinistro + destro) / 2, solo i bassi sotto 120 Hz → LFE
-- Rileva da solo se l'uscita è 5.1 o 7.1 e lo mostra nel popup
-- Quattro interruttori indipendenti; la scritta sull'icona mostra cosa è acceso (`P`, `L`, `C`, `S` e combinazioni)
-- Funziona su tutti i siti con video/audio normali (YouTube, Twitch, Vimeo, siti di notizie…)
+- **Rear**: front left → rear left, front right → rear right
+- **Side** (7.1 only): front left → side left, front right → side right
+- **Center**: (left + right) / 2 → center
+- **Subwoofer**: (left + right) / 2, only the bass below 120 Hz → LFE
+- Detects whether the output is 5.1 or 7.1 and shows it in the popup
+- Four independent switches; the badge on the icon shows what is on (`P`, `L`, `C`, `S` and combinations)
+- Works on any site with regular video/audio (YouTube, Twitch, Vimeo, news sites…)
 
-## Limiti
+The popup is in Italian: *Posteriori* = rear (`P`), *Laterali* = side (`L`), *Centrale* = center (`C`), *Subwoofer* (`S`).
 
-- **Siti con DRM** (Netflix, Prime Video, Disney+, Spotify): il browser non permette di elaborarne l'audio. L'estensione li riconosce e li lascia in stereo normale.
-- File audio/video serviti da altri domini senza CORS vengono saltati per lo stesso motivo.
-- Windows deve essere impostato su **5.1 o 7.1** (Pannello di controllo → Audio → Configura), altrimenti il browser vede solo 2 canali. Dopo aver cambiato configurazione, riavvia il browser.
-- Dopo la prima attivazione, l'audio di quel video resta instradato dall'estensione anche da spenta (in stereo normale). Ricaricare la pagina ripristina tutto.
+## Limitations
 
-- Se l'amplificatore o il driver fa già la gestione dei bassi (bass management), attivare anche il subwoofer qui può raddoppiare i bassi: in quel caso lascialo spento.
+- **DRM sites** (Netflix, Prime Video, Disney+, Spotify): the browser does not allow their audio to be processed. The extension detects them and leaves them in normal stereo.
+- Audio/video files served from other domains without CORS are skipped for the same reason.
+- Windows must be set to **5.1 or 7.1** (Control Panel → Sound → Configure), otherwise the browser only sees 2 channels. After changing the configuration, restart the browser.
+- After the first activation, that video's audio stays routed through the extension even when it is switched off (as normal stereo). Reloading the page restores everything.
 
-## Installazione
+- If your amplifier or driver already does bass management, enabling the subwoofer here can double the bass: in that case leave it off.
 
-1. Scarica o clona questo repository.
-2. Apri `chrome://extensions` (Edge: `edge://extensions`) e attiva **Modalità sviluppatore**.
-3. **Carica estensione non pacchettizzata** → seleziona la cartella `extension/`.
-4. Fissa l'icona nella barra.
+## Installation
 
-## Risoluzione problemi
+1. On this page click **Code → Download ZIP** and extract it to a folder you will keep (or clone the repository).
+2. Open `chrome://extensions` (Edge: `edge://extensions`) and turn on **Developer mode**.
+3. **Load unpacked** → select the **`extension/`** folder inside it, not the top-level folder (otherwise the browser reports a missing manifest).
+4. Pin the icon to the toolbar.
 
-- Video muto dopo l'attivazione → clicca una volta nella pagina (il browser può tenere l'audio sospeso finché non interagisci).
-- Canali aggiunti muti → F12 → Console, cerca righe che iniziano con `[Surround Fill]`.
+## Troubleshooting
 
-## Alternative
+- Video muted after activation → click once on the page (the browser may keep audio suspended until you interact with it).
+- Added channels silent → F12 → Console, look for lines starting with `[Surround Fill]`.
 
-Esistono estensioni più complete che fanno upmix stereo → surround, ad esempio *Audio Booster: Real Surround, EQ & Spatial Sound* (Chrome) e *Stereo to 7.1 Surround Upmixer* (Firefox). Questa è volutamente minimale: copia diretta dei canali, quattro interruttori, nessuna elaborazione oltre al filtro del subwoofer.
+## Alternatives
 
-## Licenza
+There are more complete extensions that upmix stereo → surround, for example *Audio Booster: Real Surround, EQ & Spatial Sound* (Chrome) and *Stereo to 7.1 Surround Upmixer* (Firefox). This one is deliberately minimal: direct channel copy, four switches, no processing beyond the subwoofer filter.
+
+## License
 
 MIT
