@@ -1,5 +1,7 @@
 # Surround Fill 5.1 / 7.1
 
+![Surround Fill popup: rear, side, center and subwoofer switches](docs/screenshot.png)
+
 A Chrome/Edge extension that copies the browser's stereo audio to the other channels of a 5.1 or 7.1 speaker system: rear, side (7.1), center and subwoofer. It works inside the page with the Web Audio API: no drivers, no software to install, no added latency.
 
 ## What it does
