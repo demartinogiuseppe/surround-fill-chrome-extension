@@ -57,7 +57,16 @@
       return;
     }
 
-    const src = c.createMediaElementSource(media);
+    // An element can only have one MediaElementSource: if the page already
+    // connected it to its own Web Audio graph, leave it alone (null = skipped)
+    let src;
+    try {
+      src = c.createMediaElementSource(media);
+    } catch (e) {
+      hooked.set(media, null);
+      console.warn("[Surround Fill] Skipped a media element already connected to Web Audio by the page.");
+      return;
+    }
 
     // Force stereo (mono sources also end up on L and R)
     const stereo = c.createGain();

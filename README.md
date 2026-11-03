@@ -18,6 +18,7 @@ A Chrome/Edge extension that copies the browser's stereo audio to the other chan
 
 - **DRM sites** (Netflix, Prime Video, Disney+, Spotify): the browser does not allow their audio to be processed. The extension detects them and leaves them in normal stereo.
 - Audio/video files served from other domains without CORS are skipped for the same reason.
+- **Sites with their own Web Audio processing** (visualizers, built-in volume boost or EQ): a media element can only be connected to Web Audio once. If the site gets there first, the extension skips that element. If the extension gets there first, the site's own audio feature may stop working: switch the extension off and reload the page.
 - Windows must be set to **5.1 or 7.1** (Control Panel → Sound → Configure), otherwise the browser only sees 2 channels. After changing the configuration, restart the browser.
 - After the first activation, that video's audio stays routed through the extension even when it is switched off (as normal stereo). Reloading the page restores everything.
 

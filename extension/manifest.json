@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Surround Fill 5.1/7.1",
-  "version": "1.4",
+  "version": "1.4.1",
   "description": "Copies L/R to rear, side (7.1), center and subwoofer channels for video and audio in the browser.",
   "permissions": [
     "storage"
